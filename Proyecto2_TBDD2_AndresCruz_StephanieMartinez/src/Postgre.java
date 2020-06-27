@@ -10,6 +10,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -32,7 +34,7 @@ public class Postgre {
     private boolean isPrueba;
     private Connection connection;
     private ArrayList<String> diferencias;
-    private Date refDate;
+    private ArrayList<Tablas> tablas;
 
     public Postgre(JTextField instancia, JTextField baseDeDatos, JTextField puerto, JTextField usuario, JTextField contrasenia, JTextArea bitacora, JTextArea consola) {
         this.instancia = instancia;
@@ -161,12 +163,12 @@ public class Postgre {
     public boolean cargarMarcaDeTiempo(){
         boolean estado = true;
         FileInputStream fis = null;
-        DataInputStream entrada = null;
+        ObjectInputStream entrada = null;
         try {
             fis = new FileInputStream("./tiempo.raffles");
-            entrada = new DataInputStream(fis);
+            entrada = new ObjectInputStream(fis);
             while (true) {   
-                refDate = new Date(entrada.readLong());
+                tablas = (ArrayList<Tablas>) entrada.readObject();
                 //System.out.println("Marca de Entrada:" + refDate.getTime());
             }
         } catch (FileNotFoundException e) {
@@ -175,6 +177,8 @@ public class Postgre {
             System.out.println("Fin de fichero");
         } catch (IOException e) {
             System.out.println(e.getMessage());
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
         } finally {
             try {
                 if (fis != null) {
@@ -192,11 +196,12 @@ public class Postgre {
     
     public void guardarMarcaDeTiempo(){
         FileOutputStream fos = null;
-        DataOutputStream salida = null;
+        ObjectOutputStream salida = null;
         try {
             fos = new FileOutputStream("./tiempo.raffles");
-            salida = new DataOutputStream(fos);
-            salida.writeLong(refDate.getTime());
+            salida = new ObjectOutputStream(fos);
+            
+            salida.writeObject(tablas);
             //System.out.println("Marca de Salida:" + refDate.getTime());
         } catch (FileNotFoundException e) {
             System.out.println(e.getMessage());
@@ -228,11 +233,12 @@ public class Postgre {
         return diferencias;
     }
 
-    public Date getRefDate() {
-        return refDate;
+    public ArrayList<Tablas> getTablas() {
+        return tablas;
     }
 
-    public void setRefDate(Date refDate) {
-        this.refDate = refDate;
+    public void setTablas(ArrayList<Tablas> tablas) {
+        this.tablas = tablas;
     }
+    
 }

@@ -21,9 +21,13 @@ public class Principal extends javax.swing.JFrame {
     public Principal() {
         initComponents();
         this.setLocationRelativeTo(null);
-        nombreBD.add("Prueba 1");
-        nombreBD.add("Prueba 2");
-        nombreBD.add("Prueba 3 ");
+        nombreBD.add("countries");
+        nombreBD.add("departments");
+        nombreBD.add("employees");
+        nombreBD.add("job_history");
+        nombreBD.add("jobs");
+        nombreBD.add("locations");
+        nombreBD.add("regions");
     }
 
     /**
@@ -475,11 +479,13 @@ public class Principal extends javax.swing.JFrame {
     private void jl_sinReplicarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jl_sinReplicarMouseClicked
         if (jl_sinReplicar.getSelectedIndex() >= 0) {
             posicionSR = jl_sinReplicar.getSelectedIndex();
+        }else{
+            posicionSR = -1;
         }
     }//GEN-LAST:event_jl_sinReplicarMouseClicked
 
     private void jb_replicarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_replicarMouseClicked
-        if (jl_sinReplicar.getSelectedIndex() >= 0) {
+        if (posicionSR!=-1) {
             DefaultListModel modelo = (DefaultListModel) jl_replicando.getModel();
             modelo.addElement(nombreBD.get(posicionSR));
             jl_replicando.setModel(modelo);
@@ -487,12 +493,14 @@ public class Principal extends javax.swing.JFrame {
             nombreBD.remove(posicionSR);
             
             DefaultListModel modeloSinReplicar = (DefaultListModel) jl_sinReplicar.getModel();
-            modeloSinReplicar.removeAllElements();
+            modeloSinReplicar.remove(posicionSR);
+//            modeloSinReplicar.removeAllElements();
+//            jl_sinReplicar.setModel(modeloSinReplicar);
+//            for (int i = 0; i < nombreBD.size(); i++) {
+//                modeloSinReplicar.addElement(nombreBD.get(i));
+//            }
             jl_sinReplicar.setModel(modeloSinReplicar);
-            for (int i = 0; i < nombreBD.size(); i++) {
-                modeloSinReplicar.addElement(nombreBD.get(i));
-            }
-            jl_sinReplicar.setModel(modeloSinReplicar);
+            posicionSR=-1;
         } else {
             JOptionPane.showMessageDialog(null, "No hay tabla seleccionada");
         }
@@ -500,24 +508,28 @@ public class Principal extends javax.swing.JFrame {
 
     private void jl_replicandoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jl_replicandoMouseClicked
         if (jl_replicando.getSelectedIndex() >= 0) {
-            posicionR = jl_replicando.getSelectedIndex();
+            posicionR = jl_replicando.getSelectedIndex();   
+        }else{
+            posicionR=-1;
         }
     }//GEN-LAST:event_jl_replicandoMouseClicked
 
     private void jb_noReplicarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_noReplicarMouseClicked
-        if (jl_replicando.getSelectedIndex() >= 0) {
+        if (posicionR!=-1) {
             DefaultListModel modelo = (DefaultListModel) jl_sinReplicar.getModel();
             modelo.addElement(nombreBDReplicando.get(posicionR));
             jl_sinReplicar.setModel(modelo);
             nombreBD.add(nombreBDReplicando.get(posicionR));
             nombreBDReplicando.remove(posicionR);
             DefaultListModel modeloReplicando = (DefaultListModel) jl_replicando.getModel();
-            modeloReplicando.removeAllElements();
+            modeloReplicando.remove(posicionR);
+//            modeloReplicando.removeAllElements();
+//            jl_replicando.setModel(modeloReplicando);
+//            for (int i = 0; i < nombreBDReplicando.size(); i++) {
+//                modeloReplicando.addElement(nombreBDReplicando.get(i));
+//            }
             jl_replicando.setModel(modeloReplicando);
-            for (int i = 0; i < nombreBDReplicando.size(); i++) {
-                modeloReplicando.addElement(nombreBDReplicando.get(i));
-            }
-            jl_replicando.setModel(modeloReplicando);
+            posicionR=-1;
         } else {
             JOptionPane.showMessageDialog(null, "No hay tabla seleccionada");
         }
@@ -607,7 +619,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTextField tf_puertoDestino;
     private javax.swing.JTextField tf_puertoOrigen;
     // End of variables declaration//GEN-END:variables
-ArrayList<String> nombreBD = new ArrayList();
+    ArrayList<String> nombreBD = new ArrayList();
     ArrayList<String> nombreBDReplicando = new ArrayList();
-    int posicionSR, posicionR;
+    int posicionSR= -1, posicionR = -1;
 }
