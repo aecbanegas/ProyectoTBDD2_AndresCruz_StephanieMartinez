@@ -85,8 +85,9 @@ public class Principal extends javax.swing.JFrame {
         jb_noReplicar = new javax.swing.JButton();
         jb_guardarReplicar = new javax.swing.JButton();
         jb_cancelarReplicar = new javax.swing.JButton();
-        jlabel_actualizaciones = new javax.swing.JLabel();
         jb_regresar = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jta_actualizaciones = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
         jb_configuracion = new javax.swing.JButton();
         jb_replicarTablas = new javax.swing.JButton();
@@ -334,15 +335,16 @@ public class Principal extends javax.swing.JFrame {
 
         jb_cancelarReplicar.setText("Cancelar");
 
-        jlabel_actualizaciones.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
-        jlabel_actualizaciones.setForeground(new java.awt.Color(255, 0, 0));
-
         jb_regresar.setText("Regresar");
         jb_regresar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jb_regresarMouseClicked(evt);
             }
         });
+
+        jta_actualizaciones.setColumns(20);
+        jta_actualizaciones.setRows(5);
+        jScrollPane3.setViewportView(jta_actualizaciones);
 
         javax.swing.GroupLayout jd_replicarLayout = new javax.swing.GroupLayout(jd_replicar.getContentPane());
         jd_replicar.getContentPane().setLayout(jd_replicarLayout);
@@ -354,10 +356,6 @@ public class Principal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel15)
                 .addGap(96, 96, 96))
-            .addGroup(jd_replicarLayout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addComponent(jlabel_actualizaciones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jd_replicarLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jb_regresar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -380,7 +378,10 @@ public class Principal extends javax.swing.JFrame {
                         .addComponent(jb_cancelarReplicar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jd_replicarLayout.createSequentialGroup()
                         .addGap(250, 250, 250)
-                        .addComponent(jLabel13)))
+                        .addComponent(jLabel13))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jd_replicarLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 615, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
         jd_replicarLayout.setVerticalGroup(
@@ -405,16 +406,13 @@ public class Principal extends javax.swing.JFrame {
                         .addComponent(jb_noReplicar)))
                 .addGap(18, 18, 18)
                 .addGroup(jd_replicarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jd_replicarLayout.createSequentialGroup()
-                        .addComponent(jb_cancelarReplicar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
-                        .addComponent(jlabel_actualizaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jb_regresar)
-                        .addGap(29, 29, 29))
-                    .addGroup(jd_replicarLayout.createSequentialGroup()
-                        .addComponent(jb_guardarReplicar)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addComponent(jb_guardarReplicar)
+                    .addComponent(jb_cancelarReplicar))
+                .addGap(14, 14, 14)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jb_regresar)
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -604,6 +602,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JButton jb_cancelarReplicar;
     private javax.swing.JButton jb_configuracion;
@@ -620,7 +619,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JDialog jd_replicar;
     private javax.swing.JList<String> jl_replicando;
     private javax.swing.JList<String> jl_sinReplicar;
-    private javax.swing.JLabel jlabel_actualizaciones;
+    private javax.swing.JTextArea jta_actualizaciones;
     private javax.swing.JTextField tf_nombreBDDestino;
     private javax.swing.JTextField tf_nombreBDOrigen;
     private javax.swing.JTextField tf_nombreInstanciaDestino;
