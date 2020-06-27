@@ -87,7 +87,6 @@ public class Principal extends javax.swing.JFrame {
         jb_cancelarReplicar = new javax.swing.JButton();
         jlabel_actualizaciones = new javax.swing.JLabel();
         jb_regresar = new javax.swing.JButton();
-        jlabel_cambios = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jb_configuracion = new javax.swing.JButton();
         jb_replicarTablas = new javax.swing.JButton();
@@ -96,13 +95,23 @@ public class Principal extends javax.swing.JFrame {
 
         jLabel3.setText("Nombre Instancia");
 
+        tf_nombreInstanciaOrigen.setText("origen.cw9v0mt6g20g.us-east-1.rds.amazonaws.com");
+
         jLabel4.setText("Nombre Base de Datos");
+
+        tf_nombreBDOrigen.setText("origen");
 
         jLabel5.setText("Puerto");
 
+        tf_puertoOrigen.setText("5432");
+
         jLabel6.setText("Nombre usuario");
 
+        tf_nombreUsuarioOrigen.setText("postgreadmin");
+
         jLabel7.setText("Password");
+
+        tf_passwordOrigen.setText("password");
 
         jb_probarOrigen.setText("Probar");
 
@@ -124,8 +133,8 @@ public class Principal extends javax.swing.JFrame {
                     .addComponent(tf_nombreUsuarioOrigen, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tf_puertoOrigen, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tf_nombreBDOrigen, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tf_nombreInstanciaOrigen, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(144, Short.MAX_VALUE))
+                    .addComponent(tf_nombreInstanciaOrigen, javax.swing.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE))
+                .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jb_probarOrigen, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -173,6 +182,16 @@ public class Principal extends javax.swing.JFrame {
 
         jb_probarDestino.setText("Probar");
 
+        tf_passwordDestino.setText("hr123");
+
+        tf_nombreUsuarioDestino.setText("hr");
+
+        tf_puertoDestino.setText("1521");
+
+        tf_nombreBDDestino.setText("destino");
+
+        tf_nombreInstanciaDestino.setText("destino.cw9v0mt6g20g.us-east-1.rds.amazonaws.com");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -191,8 +210,8 @@ public class Principal extends javax.swing.JFrame {
                     .addComponent(tf_nombreUsuarioDestino, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tf_puertoDestino, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tf_nombreBDDestino, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tf_nombreInstanciaDestino, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(144, Short.MAX_VALUE))
+                    .addComponent(tf_nombreInstanciaDestino, javax.swing.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE))
+                .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jb_probarDestino, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -316,6 +335,7 @@ public class Principal extends javax.swing.JFrame {
         jb_cancelarReplicar.setText("Cancelar");
 
         jlabel_actualizaciones.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
+        jlabel_actualizaciones.setForeground(new java.awt.Color(255, 0, 0));
 
         jb_regresar.setText("Regresar");
         jb_regresar.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -324,83 +344,77 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
-        jlabel_cambios.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
-
         javax.swing.GroupLayout jd_replicarLayout = new javax.swing.GroupLayout(jd_replicar.getContentPane());
         jd_replicar.getContentPane().setLayout(jd_replicarLayout);
         jd_replicarLayout.setHorizontalGroup(
             jd_replicarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jd_replicarLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jb_regresar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28))
-            .addGroup(jd_replicarLayout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jd_replicarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jb_replicar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jb_noReplicar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addGap(18, 18, 18))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jd_replicarLayout.createSequentialGroup()
-                .addGap(55, 55, 55)
+                .addGap(100, 100, 100)
                 .addComponent(jLabel14)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel15)
-                .addGap(63, 63, 63))
-            .addGroup(jd_replicarLayout.createSequentialGroup()
-                .addGroup(jd_replicarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jd_replicarLayout.createSequentialGroup()
-                        .addGap(181, 181, 181)
-                        .addComponent(jLabel13))
-                    .addGroup(jd_replicarLayout.createSequentialGroup()
-                        .addGap(108, 108, 108)
-                        .addComponent(jb_guardarReplicar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(69, 69, 69)
-                        .addComponent(jb_cancelarReplicar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(117, Short.MAX_VALUE))
+                .addGap(96, 96, 96))
             .addGroup(jd_replicarLayout.createSequentialGroup()
                 .addGap(10, 10, 10)
                 .addComponent(jlabel_actualizaciones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jd_replicarLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jlabel_cambios, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jb_regresar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(43, 43, 43))
+            .addGroup(jd_replicarLayout.createSequentialGroup()
+                .addGroup(jd_replicarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jd_replicarLayout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(jd_replicarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jb_replicar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jb_noReplicar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jd_replicarLayout.createSequentialGroup()
+                        .addGap(200, 200, 200)
+                        .addComponent(jb_guardarReplicar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(69, 69, 69)
+                        .addComponent(jb_cancelarReplicar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jd_replicarLayout.createSequentialGroup()
+                        .addGap(250, 250, 250)
+                        .addComponent(jLabel13)))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         jd_replicarLayout.setVerticalGroup(
             jd_replicarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jd_replicarLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel13)
+                .addGap(18, 18, 18)
+                .addGroup(jd_replicarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(jLabel15))
                 .addGroup(jd_replicarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jd_replicarLayout.createSequentialGroup()
-                        .addGap(103, 103, 103)
-                        .addComponent(jb_replicar)
-                        .addGap(28, 28, 28)
-                        .addComponent(jb_noReplicar))
-                    .addGroup(jd_replicarLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(jd_replicarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel14)
-                            .addComponent(jLabel15))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jd_replicarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jd_replicarLayout.createSequentialGroup()
+                        .addGap(65, 65, 65)
+                        .addComponent(jb_replicar)
+                        .addGap(26, 26, 26)
+                        .addComponent(jb_noReplicar)))
                 .addGap(18, 18, 18)
-                .addGroup(jd_replicarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jb_guardarReplicar)
-                    .addComponent(jb_cancelarReplicar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
-                .addComponent(jlabel_actualizaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jlabel_cambios, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jb_regresar)
-                .addGap(19, 19, 19))
+                .addGroup(jd_replicarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jd_replicarLayout.createSequentialGroup()
+                        .addComponent(jb_cancelarReplicar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                        .addComponent(jlabel_actualizaciones, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jb_regresar)
+                        .addGap(29, 29, 29))
+                    .addGroup(jd_replicarLayout.createSequentialGroup()
+                        .addComponent(jb_guardarReplicar)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -479,19 +493,19 @@ public class Principal extends javax.swing.JFrame {
     private void jl_sinReplicarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jl_sinReplicarMouseClicked
         if (jl_sinReplicar.getSelectedIndex() >= 0) {
             posicionSR = jl_sinReplicar.getSelectedIndex();
-        }else{
+        } else {
             posicionSR = -1;
         }
     }//GEN-LAST:event_jl_sinReplicarMouseClicked
 
     private void jb_replicarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_replicarMouseClicked
-        if (posicionSR!=-1) {
+        if (posicionSR != -1) {
             DefaultListModel modelo = (DefaultListModel) jl_replicando.getModel();
             modelo.addElement(nombreBD.get(posicionSR));
             jl_replicando.setModel(modelo);
             nombreBDReplicando.add(nombreBD.get(posicionSR));
             nombreBD.remove(posicionSR);
-            
+
             DefaultListModel modeloSinReplicar = (DefaultListModel) jl_sinReplicar.getModel();
             modeloSinReplicar.remove(posicionSR);
 //            modeloSinReplicar.removeAllElements();
@@ -500,7 +514,7 @@ public class Principal extends javax.swing.JFrame {
 //                modeloSinReplicar.addElement(nombreBD.get(i));
 //            }
             jl_sinReplicar.setModel(modeloSinReplicar);
-            posicionSR=-1;
+            posicionSR = -1;
         } else {
             JOptionPane.showMessageDialog(null, "No hay tabla seleccionada");
         }
@@ -508,14 +522,14 @@ public class Principal extends javax.swing.JFrame {
 
     private void jl_replicandoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jl_replicandoMouseClicked
         if (jl_replicando.getSelectedIndex() >= 0) {
-            posicionR = jl_replicando.getSelectedIndex();   
-        }else{
-            posicionR=-1;
+            posicionR = jl_replicando.getSelectedIndex();
+        } else {
+            posicionR = -1;
         }
     }//GEN-LAST:event_jl_replicandoMouseClicked
 
     private void jb_noReplicarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_noReplicarMouseClicked
-        if (posicionR!=-1) {
+        if (posicionR != -1) {
             DefaultListModel modelo = (DefaultListModel) jl_sinReplicar.getModel();
             modelo.addElement(nombreBDReplicando.get(posicionR));
             jl_sinReplicar.setModel(modelo);
@@ -529,7 +543,7 @@ public class Principal extends javax.swing.JFrame {
 //                modeloReplicando.addElement(nombreBDReplicando.get(i));
 //            }
             jl_replicando.setModel(modeloReplicando);
-            posicionR=-1;
+            posicionR = -1;
         } else {
             JOptionPane.showMessageDialog(null, "No hay tabla seleccionada");
         }
@@ -607,7 +621,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JList<String> jl_replicando;
     private javax.swing.JList<String> jl_sinReplicar;
     private javax.swing.JLabel jlabel_actualizaciones;
-    private javax.swing.JLabel jlabel_cambios;
     private javax.swing.JTextField tf_nombreBDDestino;
     private javax.swing.JTextField tf_nombreBDOrigen;
     private javax.swing.JTextField tf_nombreInstanciaDestino;
@@ -621,5 +634,5 @@ public class Principal extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
     ArrayList<String> nombreBD = new ArrayList();
     ArrayList<String> nombreBDReplicando = new ArrayList();
-    int posicionSR= -1, posicionR = -1;
+    int posicionSR = -1, posicionR = -1;
 }
