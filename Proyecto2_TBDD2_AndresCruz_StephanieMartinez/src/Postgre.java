@@ -97,68 +97,68 @@ public class Postgre {
         }
     }
     
-    public boolean obtenerDiferencias(String condiciones){
-        diferencias = new ArrayList<>();
-        String query = "SELECT * FROM audit.bitacora "+ obtenerCondicionTiempo() + condiciones;
-        System.out.println("Query generada:" + query);
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
-
-            //Verificador de Sincornizacion
-            if (resultSet.next()) {
-                do {
-                    switch(resultSet.getString("accion")){
-                        case "I":
-                            consola.append("\nINFORMACION: Se ha encontrado una Insercion en la tabla: " + resultSet.getString("tabla"));
-                            consola.append("\n---------------------------------------------------------------------------");
-                            break;
-                        case "D":
-                            consola.append("\nINFORMACION: Se ha encontrado una Eliminacion en la tabla: " + resultSet.getString("tabla"));
-                            consola.append("\n---------------------------------------------------------------------------");
-                            break;
-                        case "U":
-                            consola.append("\nINFORMACION: Se ha encontrado una Actualizacion en la tabla: " + resultSet.getString("tabla"));
-                            consola.append("\n---------------------------------------------------------------------------");
-                            break;
-                    }
-                    String temp = resultSet.getString("operacion");
-                    temp = temp.replace(';', ' ');
-                    diferencias.add(temp);
-                } while (resultSet.next());
-            } else {
-                consola.append("\nINFORMACION: Las Bases de Datos estan actualizadas");
-                consola.append("\n---------------------------------------------------------------------------");
-                return false;
-            }
-        } catch (SQLException ex) {
-            if (ex.getCause() == null) {
-                consola.append("\nERROR: " + ex.getMessage());
-            }else{
-                consola.append("\nERROR: " + ex.getMessage() + ex.getCause().toString());
-            }
-            consola.append("\n---------------------------------------------------------------------------");
-            return false;
-        } 
-        return true;
-    }
-    
-    private String obtenerCondicionTiempo(){
-        if (cargarMarcaDeTiempo()) {
-            return "WHERE fecha_hora >= '" + getMarcaDeTimepo()+ "' ";
-        }else{
-            return "";
-        }
-        
-    }
-    
-    public String getMarcaDeTimepo(){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
-        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-        String timeStamp = dateFormat.format(refDate);
-        //System.out.println("Marca de tiempo format:" + timeStamp);
-        return timeStamp;
-    }
+//    public boolean obtenerDiferencias(String condiciones){
+//        diferencias = new ArrayList<>();
+//        String query = "SELECT * FROM audit.bitacora "+ obtenerCondicionTiempo() + condiciones;
+//        System.out.println("Query generada:" + query);
+//        try {
+//            Statement statement = connection.createStatement();
+//            ResultSet resultSet = statement.executeQuery(query);
+//
+//            //Verificador de Sincornizacion
+//            if (resultSet.next()) {
+//                do {
+//                    switch(resultSet.getString("accion")){
+//                        case "I":
+//                            consola.append("\nINFORMACION: Se ha encontrado una Insercion en la tabla: " + resultSet.getString("tabla"));
+//                            consola.append("\n---------------------------------------------------------------------------");
+//                            break;
+//                        case "D":
+//                            consola.append("\nINFORMACION: Se ha encontrado una Eliminacion en la tabla: " + resultSet.getString("tabla"));
+//                            consola.append("\n---------------------------------------------------------------------------");
+//                            break;
+//                        case "U":
+//                            consola.append("\nINFORMACION: Se ha encontrado una Actualizacion en la tabla: " + resultSet.getString("tabla"));
+//                            consola.append("\n---------------------------------------------------------------------------");
+//                            break;
+//                    }
+//                    String temp = resultSet.getString("operacion");
+//                    temp = temp.replace(';', ' ');
+//                    diferencias.add(temp);
+//                } while (resultSet.next());
+//            } else {
+//                consola.append("\nINFORMACION: Las Bases de Datos estan actualizadas");
+//                consola.append("\n---------------------------------------------------------------------------");
+//                return false;
+//            }
+//        } catch (SQLException ex) {
+//            if (ex.getCause() == null) {
+//                consola.append("\nERROR: " + ex.getMessage());
+//            }else{
+//                consola.append("\nERROR: " + ex.getMessage() + ex.getCause().toString());
+//            }
+//            consola.append("\n---------------------------------------------------------------------------");
+//            return false;
+//        } 
+//        return true;
+//    }
+//    
+//    private String obtenerCondicionTiempo(){
+//        if (cargarMarcaDeTiempo()) {
+//            return "WHERE fecha_hora >= '" + getMarcaDeTimepo()+ "' ";
+//        }else{
+//            return "";
+//        }
+//        
+//    }
+//    
+//    public String getMarcaDeTimepo(){
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+//        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+//        String timeStamp = dateFormat.format(refDate);
+//        //System.out.println("Marca de tiempo format:" + timeStamp);
+//        return timeStamp;
+//    }
     
     public boolean cargarMarcaDeTiempo(){
         boolean estado = true;
