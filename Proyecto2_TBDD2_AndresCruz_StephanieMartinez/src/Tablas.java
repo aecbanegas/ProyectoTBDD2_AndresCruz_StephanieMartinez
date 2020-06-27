@@ -1,4 +1,5 @@
 
+import java.io.Serializable;
 import java.util.Date;
 
 /*
@@ -11,7 +12,7 @@ import java.util.Date;
  *
  * @author andrescruz
  */
-public class Tablas {
+public class Tablas implements Serializable{
     String nombre;
     Date Fecha;
 

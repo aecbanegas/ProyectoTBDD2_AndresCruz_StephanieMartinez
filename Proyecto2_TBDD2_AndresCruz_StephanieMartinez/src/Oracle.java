@@ -38,32 +38,41 @@ public class Oracle {
         cadenaConexion = String.format("jdbc:oracle:thin:@//%s:%s/%s", instancia.getText(), puerto.getText(), baseDeDatos.getText());
     }
     
+    public boolean estadoConexion() throws SQLException{
+        if (connection.isClosed()) {
+            return false;
+        }else{
+            return true;
+        }
+    }
+    
     public void crearConexion(){
         try {
             crearCadenaConexion();
             connection = DriverManager.getConnection(cadenaConexion, usuario.getText(), contrasenia.getText());
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("select msg from hr.welcomes");
+            ResultSet resultSet = statement.executeQuery("select * from mensaje");
+            bitacora.append("\nConexion Exitosa a:");
             while(resultSet.next()){
-            bitacora.append("\n" + resultSet.getString(1));
-            bitacora.append("\n---------------------------------------------------------------------------");
+                bitacora.append("\n" + resultSet.getString(1));
+                bitacora.append("\n--------------------------------------------------------");
             }
         }catch (SQLException ex) {
-            
+            ex.printStackTrace();
             if (ex.getCause() == null) {
                 bitacora.append("\nERROR: " + ex.getMessage());
             }else{
                 bitacora.append("\nERROR: " + ex.getMessage() + ex.getCause().toString());
             }
-            bitacora.append("\n---------------------------------------------------------------------------");
+            bitacora.append("\n--------------------------------------------------------");
         }finally{
             if (isPrueba) {
                 cerrarConexion();
-                bitacora.append("\nPrueba Terminada - Cerrando Conexion");
-                bitacora.append("\n---------------------------------------------------------------------------");
+                bitacora.append("\nPrueba Finalizada");
+                bitacora.append("\n--------------------------------------------------------");
             }else{
                 bitacora.append("\nGuardando Bases de Datos de Destino");
-                bitacora.append("\n---------------------------------------------------------------------------");
+                bitacora.append("\n--------------------------------------------------------");
             }
         }
         
@@ -75,13 +84,13 @@ public class Oracle {
                 connection.close();
                 if (!isPrueba) {
                     bitacora.append("\nCerrando Conexion - Base de Datos Destino");
-                    bitacora.append("\n---------------------------------------------------------------------------");
+                    bitacora.append("\n--------------------------------------------------------");
                 }
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
             bitacora.append("ERROR: " + ex.getMessage() + ex.getCause().toString());
-            bitacora.append("\n---------------------------------------------------------------------------");
+            bitacora.append("\n--------------------------------------------------------");
         }
     }
     
@@ -91,12 +100,12 @@ public class Oracle {
             statement.executeUpdate(query);
         } catch (SQLException ex) {
             consola.append("ERROR: " + ex.getMessage() + ex.getCause().toString());
-            consola.append("\n---------------------------------------------------------------------------");
+            consola.append("\n--------------------------------------------------------");
             try {
                 connection.rollback();
             } catch (SQLException ex1) {
                 consola.append("ERROR: " + ex.getMessage() + ex.getCause().toString());
-                consola.append("\n---------------------------------------------------------------------------");
+                consola.append("\n--------------------------------------------------------");
             }
             return false;
         }
