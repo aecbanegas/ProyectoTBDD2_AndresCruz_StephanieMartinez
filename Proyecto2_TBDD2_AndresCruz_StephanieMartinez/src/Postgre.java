@@ -3,8 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+
 import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -17,7 +16,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,15 +24,14 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public class Postgre {
-    //instancia de postgre: origen.cw9v0mt6g20g.us-east-1.rds.amazonaws.com
-    //admin password
     private JTextField instancia, baseDeDatos, puerto, usuario, contrasenia;
     private JTextArea bitacora, consola;
     private String cadenaConexion;
     private boolean isPrueba;
     private Connection connection;
     private ArrayList<String> diferencias;
-    private ArrayList<Tablas> tablas;
+    private ArrayList<Tablas> tablas = new ArrayList<>();
+    //private Date refDate;
 
     public Postgre(JTextField instancia, JTextField baseDeDatos, JTextField puerto, JTextField usuario, JTextField contrasenia, JTextArea bitacora, JTextArea consola) {
         this.instancia = instancia;
@@ -44,6 +41,7 @@ public class Postgre {
         this.contrasenia = contrasenia;
         this.bitacora = bitacora;
         this.consola = consola;
+        this.connection = null;
     }
     
     private void crearCadenaConexion(){
@@ -61,7 +59,6 @@ public class Postgre {
             bitacora.append("\n" + resultSet.getString(1) + " - " + resultSet.getString(2));
             bitacora.append("\n---------------------------------------------------------------------------");
         }catch (SQLException ex) {
-            
             if (ex.getCause() == null) {
                 bitacora.append("\nERROR: " + ex.getMessage());
             }else{
@@ -83,82 +80,98 @@ public class Postgre {
     
     public void cerrarConexion(){
         try {
-            if (!connection.isClosed()) {
-                connection.close();
-                if (!isPrueba) {
-                    bitacora.append("\nCerrando Conexion - Base de Datos Origen");
-                    bitacora.append("\n---------------------------------------------------------------------------");
+            if (connection != null) {
+                if (!connection.isClosed()) {
+                    connection.close();
+                    if (!isPrueba) {
+                        bitacora.append("\nCerrando Conexion - Base de Datos Origen");
+                        bitacora.append("\n---------------------------------------------------------------------------");
+                    }
                 }
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
-            bitacora.append("\nERROR: " + ex.getMessage() + ex.getCause().toString());
+            if (ex.getCause() == null) {
+                bitacora.append("\nERROR: " + ex.getMessage());
+            }else{
+                bitacora.append("\nERROR: " + ex.getMessage() + ex.getCause().toString());
+            }
             bitacora.append("\n---------------------------------------------------------------------------");
         }
     }
     
-//    public boolean obtenerDiferencias(String condiciones){
-//        diferencias = new ArrayList<>();
-//        String query = "SELECT * FROM audit.bitacora "+ obtenerCondicionTiempo() + condiciones;
-//        System.out.println("Query generada:" + query);
-//        try {
-//            Statement statement = connection.createStatement();
-//            ResultSet resultSet = statement.executeQuery(query);
-//
-//            //Verificador de Sincornizacion
-//            if (resultSet.next()) {
-//                do {
-//                    switch(resultSet.getString("accion")){
-//                        case "I":
-//                            consola.append("\nINFORMACION: Se ha encontrado una Insercion en la tabla: " + resultSet.getString("tabla"));
-//                            consola.append("\n---------------------------------------------------------------------------");
-//                            break;
-//                        case "D":
-//                            consola.append("\nINFORMACION: Se ha encontrado una Eliminacion en la tabla: " + resultSet.getString("tabla"));
-//                            consola.append("\n---------------------------------------------------------------------------");
-//                            break;
-//                        case "U":
-//                            consola.append("\nINFORMACION: Se ha encontrado una Actualizacion en la tabla: " + resultSet.getString("tabla"));
-//                            consola.append("\n---------------------------------------------------------------------------");
-//                            break;
-//                    }
-//                    String temp = resultSet.getString("operacion");
-//                    temp = temp.replace(';', ' ');
-//                    diferencias.add(temp);
-//                } while (resultSet.next());
-//            } else {
-//                consola.append("\nINFORMACION: Las Bases de Datos estan actualizadas");
-//                consola.append("\n---------------------------------------------------------------------------");
-//                return false;
-//            }
-//        } catch (SQLException ex) {
-//            if (ex.getCause() == null) {
-//                consola.append("\nERROR: " + ex.getMessage());
-//            }else{
-//                consola.append("\nERROR: " + ex.getMessage() + ex.getCause().toString());
-//            }
-//            consola.append("\n---------------------------------------------------------------------------");
-//            return false;
-//        } 
-//        return true;
-//    }
-//    
-//    private String obtenerCondicionTiempo(){
-//        if (cargarMarcaDeTiempo()) {
-//            return "WHERE fecha_hora >= '" + getMarcaDeTimepo()+ "' ";
-//        }else{
-//            return "";
-//        }
-//        
-//    }
-//    
-//    public String getMarcaDeTimepo(){
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
-//        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-//        String timeStamp = dateFormat.format(refDate);
-//        //System.out.println("Marca de tiempo format:" + timeStamp);
-//        return timeStamp;
-//    }
+    public boolean obtenerDiferencias(String condiciones, String tabla){
+        diferencias = new ArrayList<>();
+        String query = "SELECT * FROM audit.bitacora "+ obtenerCondicionTiempo(tabla) + condiciones;
+        System.out.println("Query generada:" + query);
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+
+            //Verificador de Sincornizacion
+            if (resultSet.next()) {
+                do {
+                    switch(resultSet.getString("accion")){
+                        case "I":
+                            consola.append("\nINFORMACION: Se ha encontrado una Insercion en la tabla: " + resultSet.getString("tabla"));
+                            consola.append("\n---------------------------------------------------------------------------");
+                            break;
+                        case "D":
+                            consola.append("\nINFORMACION: Se ha encontrado una Eliminacion en la tabla: " + resultSet.getString("tabla"));
+                            consola.append("\n---------------------------------------------------------------------------");
+                            break;
+                        case "U":
+                            consola.append("\nINFORMACION: Se ha encontrado una Actualizacion en la tabla: " + resultSet.getString("tabla"));
+                            consola.append("\n---------------------------------------------------------------------------");
+                            break;
+                    }
+                    String temp = resultSet.getString("operacion");
+                    temp = temp.replace(';', ' ');
+                    diferencias.add(temp);
+                } while (resultSet.next());
+            } else {
+                consola.append("\nINFORMACION: Las Bases de Datos estan actualizadas en la tabla: " + tabla);
+                consola.append("\n---------------------------------------------------------------------------");
+                return false;
+            }
+        } catch (SQLException ex) {
+            if (ex.getCause() == null) {
+                consola.append("\nERROR: " + ex.getMessage());
+            }else{
+                consola.append("\nERROR: " + ex.getMessage() + ex.getCause().toString());
+            }
+            consola.append("\n---------------------------------------------------------------------------");
+            return false;
+        } 
+        return true;
+    }
+    
+    private String obtenerCondicionTiempo(String tabla){
+        if (cargarMarcaDeTiempo()) {
+            String temp = getMarcaDeTimepo(tabla);
+            if (temp != null) {
+                return "WHERE fecha_hora >= '" + temp + "' ";
+            }else{
+                return "";
+            }
+        }else{
+            return "";
+        }
+        
+    }
+    
+    public String getMarcaDeTimepo(String tabla){
+        String timeStamp = "";
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        Tablas temp = getTabla(tabla);
+        if (temp == null) {
+            return null;
+        }else{
+            timeStamp = dateFormat.format(temp.getFecha());
+        }
+        //System.out.println("Marca de tiempo format:" + timeStamp);
+        return timeStamp;
+    }
     
     public boolean cargarMarcaDeTiempo(){
         boolean estado = true;
@@ -221,6 +234,20 @@ public class Postgre {
         }
     }
 
+    public ArrayList<String> getDiferencias() {
+        return diferencias;
+    }
+
+    public void setRefDate(String tabla, Date Fecha) {
+        Tablas temp = getTabla(tabla);
+        if (temp == null) {
+            tablas.add(new Tablas(tabla, Fecha));
+        }else{
+            temp.setFecha(Fecha);
+        }
+        
+    }
+        
     public boolean isIsPrueba() {
         return isPrueba;
     }
@@ -229,16 +256,13 @@ public class Postgre {
         this.isPrueba = isPrueba;
     }
     
-    public ArrayList<String> getDiferencias() {
-        return diferencias;
+    public Tablas getTabla(String tabla){
+        for (Tablas refDate : tablas) {
+            if (tabla.equals(refDate.getNombre())) {
+                //refDate.setMarcaTiempo(timeStamp);
+                return refDate;
+            }
+        }
+        return null;
     }
-
-    public ArrayList<Tablas> getTablas() {
-        return tablas;
-    }
-
-    public void setTablas(ArrayList<Tablas> tablas) {
-        this.tablas = tablas;
-    }
-    
 }
