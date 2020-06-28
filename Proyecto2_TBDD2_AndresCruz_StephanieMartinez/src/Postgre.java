@@ -268,4 +268,14 @@ public class Postgre {
         }
         return null;
     }
+
+    public ArrayList<Tablas> getTablas() {
+        return tablas;
+    }
+
+    public void setTablas(ArrayList<Tablas> tablas) {
+        this.tablas = tablas;
+    }
+    
+    
 }

@@ -1,6 +1,8 @@
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -31,6 +33,20 @@ public class Principal extends javax.swing.JFrame {
         nombreBD.add("jobs");
         nombreBD.add("locations");
         nombreBD.add("regions");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        Date fecha = new Date();
+        dateFormat.format(fecha);
+        ArrayList<Tablas> tablas = new ArrayList();
+        tablas.add(new Tablas("countries", fecha));
+        tablas.add(new Tablas("departments", fecha));
+        tablas.add(new Tablas("employees", fecha));
+        tablas.add(new Tablas("job_history", fecha));
+        tablas.add(new Tablas("jobs", fecha));
+        tablas.add(new Tablas("locations", fecha));
+        tablas.add(new Tablas("regions", fecha));
+        origen =new Postgre(tf_nombreInstanciaOrigen, tf_nombreBDOrigen, tf_puertoOrigen, tf_nombreUsuarioOrigen, tf_passwordOrigen, ta_OrigenPrueba, jta_actualizaciones);
+        origen.setTablas(tablas);
+        origen.guardarTablas();
     }
 
     /**
