@@ -18,24 +18,24 @@ import javax.swing.JTextField;
 public class Oracle {
     //instancia destino.cw9v0mt6g20g.us-east-1.rds.amazonaws.com
     //hr hr123
-    private JTextField instancia, baseDeDatos, puerto, usuario, contrasenia;
-    private JTextArea bitacora, consola;
+    private JTextField instancia, nombreBD, puerto, usuario, password;
+    private JTextArea revision, resultados;
     private String cadenaConexion;
     private boolean isPrueba;
     private Connection connection;
 
     public Oracle(JTextField instancia, JTextField baseDeDatos, JTextField puerto, JTextField usuario, JTextField contrasenia, JTextArea bitacora, JTextArea consola) {
         this.instancia = instancia;
-        this.baseDeDatos = baseDeDatos;
+        this.nombreBD = baseDeDatos;
         this.puerto = puerto;
         this.usuario = usuario;
-        this.contrasenia = contrasenia;
-        this.bitacora = bitacora;
-        this.consola = consola;
+        this.password = contrasenia;
+        this.revision = bitacora;
+        this.resultados = consola;
     }
     
     private void crearCadenaConexion(){
-        cadenaConexion = String.format("jdbc:oracle:thin:@//%s:%s/%s", instancia.getText(), puerto.getText(), baseDeDatos.getText());
+        cadenaConexion = String.format("jdbc:oracle:thin:@//%s:%s/%s", instancia.getText(), puerto.getText(), nombreBD.getText());
     }
     
     public boolean estadoConexion() throws SQLException{
@@ -49,30 +49,30 @@ public class Oracle {
     public void crearConexion(){
         try {
             crearCadenaConexion();
-            connection = DriverManager.getConnection(cadenaConexion, usuario.getText(), contrasenia.getText());
+            connection = DriverManager.getConnection(cadenaConexion, usuario.getText(), password.getText());
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("select * from mensaje");
-            bitacora.append("\nConexion Exitosa a:");
+            revision.append("\nConexion Exitosa a:");
             while(resultSet.next()){
-                bitacora.append("\n" + resultSet.getString(1));
-                bitacora.append("\n--------------------------------------------------------");
+                revision.append("\n" + resultSet.getString(1));
+                revision.append("\n--------------------------------------------------------");
             }
         }catch (SQLException ex) {
             ex.printStackTrace();
             if (ex.getCause() == null) {
-                bitacora.append("\nERROR: " + ex.getMessage());
+                revision.append("\nERROR: " + ex.getMessage());
             }else{
-                bitacora.append("\nERROR: " + ex.getMessage() + ex.getCause().toString());
+                revision.append("\nERROR: " + ex.getMessage() + ex.getCause().toString());
             }
-            bitacora.append("\n--------------------------------------------------------");
+            revision.append("\n--------------------------------------------------------");
         }finally{
             if (isPrueba) {
                 cerrarConexion();
-                bitacora.append("\nPrueba Finalizada");
-                bitacora.append("\n--------------------------------------------------------");
+                revision.append("\nPrueba Finalizada");
+                revision.append("\n--------------------------------------------------------");
             }else{
-                bitacora.append("\nGuardando Bases de Datos de Destino");
-                bitacora.append("\n--------------------------------------------------------");
+                revision.append("\nGuardando Bases de Datos de Destino");
+                revision.append("\n--------------------------------------------------------");
             }
         }
         
@@ -83,14 +83,14 @@ public class Oracle {
             if (!connection.isClosed()) {
                 connection.close();
                 if (!isPrueba) {
-                    bitacora.append("\nCerrando Conexion - Base de Datos Destino");
-                    bitacora.append("\n--------------------------------------------------------");
+                    revision.append("\nCerrando Conexion - Base de Datos Destino");
+                    revision.append("\n--------------------------------------------------------");
                 }
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
-            bitacora.append("ERROR: " + ex.getMessage() + ex.getCause().toString());
-            bitacora.append("\n--------------------------------------------------------");
+            revision.append("ERROR: " + ex.getMessage() + ex.getCause().toString());
+            revision.append("\n--------------------------------------------------------");
         }
     }
     
@@ -99,13 +99,13 @@ public class Oracle {
             Statement statement = connection.createStatement();
             statement.executeUpdate(query);
         } catch (SQLException ex) {
-            consola.append("ERROR: " + ex.getMessage() + ex.getCause().toString());
-            consola.append("\n--------------------------------------------------------");
+            resultados.append("ERROR: " + ex.getMessage() + ex.getCause().toString());
+            resultados.append("\n--------------------------------------------------------");
             try {
                 connection.rollback();
             } catch (SQLException ex1) {
-                consola.append("ERROR: " + ex.getMessage() + ex.getCause().toString());
-                consola.append("\n--------------------------------------------------------");
+                resultados.append("ERROR: " + ex.getMessage() + ex.getCause().toString());
+                resultados.append("\n--------------------------------------------------------");
             }
             return false;
         }

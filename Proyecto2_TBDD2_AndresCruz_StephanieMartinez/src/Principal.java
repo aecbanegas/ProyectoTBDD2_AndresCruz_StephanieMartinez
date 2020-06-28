@@ -26,29 +26,15 @@ public class Principal extends javax.swing.JFrame {
     public Principal() {
         initComponents();
         this.setLocationRelativeTo(null);
-        nombreBD.add("countries");
-        nombreBD.add("departments");
-        nombreBD.add("employees");
-        nombreBD.add("job_history");
-        nombreBD.add("jobs");
-        nombreBD.add("locations");
-        nombreBD.add("regions");
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-        Date fecha = new Date();
-        dateFormat.format(fecha);
-        ArrayList<Tablas> tablas = new ArrayList();
-        tablas.add(new Tablas("countries", fecha));
-        tablas.add(new Tablas("departments", fecha));
-        tablas.add(new Tablas("employees", fecha));
-        tablas.add(new Tablas("job_history", fecha));
-        tablas.add(new Tablas("jobs", fecha));
-        tablas.add(new Tablas("locations", fecha));
-        tablas.add(new Tablas("regions", fecha));
-        origen =new Postgre(tf_nombreInstanciaOrigen, tf_nombreBDOrigen, tf_puertoOrigen, tf_nombreUsuarioOrigen, tf_passwordOrigen, ta_OrigenPrueba, jta_actualizaciones);
-        origen.setTablas(tablas);
-        origen.guardarTablas();
+        tablasOrigen.add("countries");
+        tablasOrigen.add("departments");
+        tablasOrigen.add("employees");
+        tablasOrigen.add("job_history");
+        tablasOrigen.add("jobs");
+        tablasOrigen.add("locations");
+        tablasOrigen.add("regions");
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -400,6 +386,11 @@ public class Principal extends javax.swing.JFrame {
         });
 
         jb_guardarReplicar.setText("Guardar");
+        jb_guardarReplicar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jb_guardarReplicarMouseClicked(evt);
+            }
+        });
 
         jb_regresar.setText("Regresar");
         jb_regresar.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -553,18 +544,13 @@ public class Principal extends javax.swing.JFrame {
     private void jb_replicarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_replicarMouseClicked
         if (posicionSR != -1) {
             DefaultListModel modelo = (DefaultListModel) jl_replicando.getModel();
-            modelo.addElement(nombreBD.get(posicionSR));
+            modelo.addElement(tablasOrigen.get(posicionSR));
             jl_replicando.setModel(modelo);
-            nombreBDReplicando.add(nombreBD.get(posicionSR));
-            nombreBD.remove(posicionSR);
+            tablasReplicar.add(tablasOrigen.get(posicionSR));
+            tablasOrigen.remove(posicionSR);
 
             DefaultListModel modeloSinReplicar = (DefaultListModel) jl_sinReplicar.getModel();
             modeloSinReplicar.remove(posicionSR);
-//            modeloSinReplicar.removeAllElements();
-//            jl_sinReplicar.setModel(modeloSinReplicar);
-//            for (int i = 0; i < nombreBD.size(); i++) {
-//                modeloSinReplicar.addElement(nombreBD.get(i));
-//            }
             jl_sinReplicar.setModel(modeloSinReplicar);
             posicionSR = -1;
         } else {
@@ -583,17 +569,12 @@ public class Principal extends javax.swing.JFrame {
     private void jb_noReplicarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_noReplicarMouseClicked
         if (posicionR != -1) {
             DefaultListModel modelo = (DefaultListModel) jl_sinReplicar.getModel();
-            modelo.addElement(nombreBDReplicando.get(posicionR));
+            modelo.addElement(tablasReplicar.get(posicionR));
             jl_sinReplicar.setModel(modelo);
-            nombreBD.add(nombreBDReplicando.get(posicionR));
-            nombreBDReplicando.remove(posicionR);
+            tablasOrigen.add(tablasReplicar.get(posicionR));
+            tablasReplicar.remove(posicionR);
             DefaultListModel modeloReplicando = (DefaultListModel) jl_replicando.getModel();
             modeloReplicando.remove(posicionR);
-//            modeloReplicando.removeAllElements();
-//            jl_replicando.setModel(modeloReplicando);
-//            for (int i = 0; i < nombreBDReplicando.size(); i++) {
-//                modeloReplicando.addElement(nombreBDReplicando.get(i));
-//            }
             jl_replicando.setModel(modeloReplicando);
             posicionR = -1;
         } else {
@@ -630,8 +611,8 @@ public class Principal extends javax.swing.JFrame {
         try {
             if (origen.estadoConexion()&&destino.estadoConexion()) {
                 DefaultListModel modelo = (DefaultListModel) jl_sinReplicar.getModel();
-                for (int i = 0; i < nombreBD.size(); i++) {
-                    modelo.addElement(nombreBD.get(i));
+                for (int i = 0; i < tablasOrigen.size(); i++) {
+                    modelo.addElement(tablasOrigen.get(i));
                 }
                 
                 jl_sinReplicar.setModel(modelo);
@@ -644,6 +625,43 @@ public class Principal extends javax.swing.JFrame {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_jb_guardarMouseClicked
+
+    private void jb_guardarReplicarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_guardarReplicarMouseClicked
+        // TODO add your handling code here:
+        DefaultListModel modelo= (DefaultListModel)jl_replicando.getModel();
+        if (!modelo.isEmpty()) {
+            jta_actualizaciones.append("\n-------------Nueva Sincronizacion-------------");
+            for (int i = 0; i < modelo.size(); i++) {
+                String tablamodelo = modelo.get(i).toString();
+                String condicion="";
+                if (origen.cargarTablas() && origen.getTabla(tablamodelo) != null) {
+                    condicion += "AND tabla = '" + tablamodelo + "'";
+                } else {
+                    condicion += "WHERE tabla = '" + tablamodelo + "'";
+                }
+                if (origen.generadorQuery(condicion, tablamodelo)) {
+                    boolean fallo=false;
+                    ArrayList<String> diferencias = origen.getDiferencias();
+                    for(String diferencia:diferencias){
+                        if (!destino.generarCambios(diferencia)) {
+                            fallo = true;
+                            break;
+                        }
+                    }
+                    if (!fallo) {
+                        origen.setFechaActualizacion(tablamodelo, new Date());
+                        jta_actualizaciones.append("\nSe han actualizado los datos de la tabla "+ tablamodelo+": "+ origen.getFechaActualizacion(tablamodelo));
+                        jta_actualizaciones.append("\n--------------------------------------------------------");
+                        jta_actualizaciones.append("\nSincronizacion realizada entre bases de Datos");
+                        jta_actualizaciones.append("\n--------------------------------------------------------");
+                        origen.guardarTablas();
+                    }
+                }
+            }
+        }else{
+            JOptionPane.showMessageDialog(null,"No hay tabla seleccionada en Replicando");
+        }
+    }//GEN-LAST:event_jb_guardarReplicarMouseClicked
 
     /**
      * @param args the command line arguments
@@ -734,8 +752,8 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTextField tf_puertoDestino;
     private javax.swing.JTextField tf_puertoOrigen;
     // End of variables declaration//GEN-END:variables
-    ArrayList<String> nombreBD = new ArrayList();
-    ArrayList<String> nombreBDReplicando = new ArrayList();
+    ArrayList<String> tablasOrigen = new ArrayList();
+    ArrayList<String> tablasReplicar = new ArrayList();
     int posicionSR = -1, posicionR = -1;
     Postgre origen=null;
     Oracle destino=null;

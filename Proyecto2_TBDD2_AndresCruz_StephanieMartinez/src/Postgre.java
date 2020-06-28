@@ -19,66 +19,65 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.TimeZone;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public class Postgre {
-    private JTextField instancia, baseDeDatos, puerto, usuario, contrasenia;
-    private JTextArea bitacora, consola;
+    private JTextField instancia, nombreBD, puerto, usuario, password;
+    private JTextArea revision, resultados;
     private String cadenaConexion;
     private boolean isPrueba;
-    private Connection connection;
+    private Connection conexion;
     private ArrayList<String> diferencias;
     private ArrayList<Tablas> tablas = new ArrayList<>();
 
     public Postgre(JTextField instancia, JTextField baseDeDatos, JTextField puerto, JTextField usuario, JTextField contrasenia, JTextArea bitacora, JTextArea consola) {
         this.instancia = instancia;
-        this.baseDeDatos = baseDeDatos;
+        this.nombreBD = baseDeDatos;
         this.puerto = puerto;
         this.usuario = usuario;
-        this.contrasenia = contrasenia;
-        this.bitacora = bitacora;
-        this.consola = consola;
-        this.connection = null;
+        this.password = contrasenia;
+        this.revision = bitacora;
+        this.resultados = consola;
+        this.conexion = null;
     }
     
     private void crearCadenaConexion(){
-        cadenaConexion = String.format("jdbc:postgresql://%s:%s/%s", instancia.getText(), puerto.getText(), baseDeDatos.getText());
+        cadenaConexion = String.format("jdbc:postgresql://%s:%s/%s", instancia.getText(), puerto.getText(), nombreBD.getText());
     }
     
     public void crearConexion(){
         try {
             crearCadenaConexion();
-            connection = DriverManager.getConnection(cadenaConexion, usuario.getText(), contrasenia.getText());
-            Statement statement = connection.createStatement();
+            conexion = DriverManager.getConnection(cadenaConexion, usuario.getText(), password.getText());
+            Statement statement = conexion.createStatement();
             ResultSet resultSet = statement.executeQuery("select datname from pg_database where datname = 'origen'");
             resultSet.next();
-            bitacora.append("\nConexion Exitosa a:");
-            bitacora.append("\n" + resultSet.getString(1));
-            bitacora.append("\n--------------------------------------------------------");
+            revision.append("\nConexion Exitosa a:");
+            revision.append("\n" + resultSet.getString(1));
+            revision.append("\n--------------------------------------------------------");
         }catch (SQLException ex) {
             if (ex.getCause() == null) {
-                bitacora.append("\nERROR: " + ex.getMessage());
+                revision.append("\nERROR: " + ex.getMessage());
             }else{
-                bitacora.append("\nERROR: " + ex.getMessage() + ex.getCause().toString());
+                revision.append("\nERROR: " + ex.getMessage() + ex.getCause().toString());
             }
-            bitacora.append("\n--------------------------------------------------------");
+            revision.append("\n--------------------------------------------------------");
         }finally{
             if (isPrueba) {
                 cerrarConexion();
-                bitacora.append("\nPrueba Finalizada");
-                bitacora.append("\n--------------------------------------------------------");
+                revision.append("\nPrueba Finalizada");
+                revision.append("\n--------------------------------------------------------");
             }else{
-                bitacora.append("\nGuardando Datos de Base de Datos de Origen");
-                bitacora.append("\n--------------------------------------------------------");
+                revision.append("\nGuardando Datos de Base de Datos de Origen");
+                revision.append("\n--------------------------------------------------------");
             }
         }
         
     }
     
     public boolean estadoConexion() throws SQLException{
-        if (connection.isClosed()) {
+        if (conexion.isClosed()) {
             return false;
         }else{
             return true;
@@ -88,31 +87,31 @@ public class Postgre {
     
     public void cerrarConexion(){
         try {
-            if (connection != null) {
-                if (!connection.isClosed()) {
-                    connection.close();
+            if (conexion != null) {
+                if (!conexion.isClosed()) {
+                    conexion.close();
                     if (!isPrueba) {
-                        bitacora.append("\nCerrando Conexion");
-                        bitacora.append("\n--------------------------------------------------------");
+                        revision.append("\nCerrando Conexion");
+                        revision.append("\n--------------------------------------------------------");
                     }
                 }
             }
         } catch (SQLException ex) {
             if (ex.getCause() == null) {
-                bitacora.append("\nERROR: " + ex.getMessage());
+                revision.append("\nERROR: " + ex.getMessage());
             }else{
-                bitacora.append("\nERROR: " + ex.getMessage() + ex.getCause().toString());
+                revision.append("\nERROR: " + ex.getMessage() + ex.getCause().toString());
             }
-            bitacora.append("\n--------------------------------------------------------");
+            revision.append("\n--------------------------------------------------------");
         }
     }
     
-    public boolean obtenerDiferencias(String condiciones, String tabla){
+    public boolean generadorQuery(String condiciones, String tabla){
         diferencias = new ArrayList<>();
         String query = "SELECT * FROM audit.bitacoraOrigen "+ obtenerCondicionTiempo(tabla) + condiciones;
-        System.out.println("Query:" + query);
+        //System.out.println("Query:" + query);
         try {
-            Statement statement = connection.createStatement();
+            Statement statement = conexion.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
 
             //Verificador de Sincornizacion
@@ -120,16 +119,16 @@ public class Postgre {
                 do {
                     switch(resultSet.getString("operacion")){
                         case "I":
-                            consola.append("\nSe ha encontrado una Insercion en: " + resultSet.getString("tabla"));
-                            consola.append("\n--------------------------------------------------------");
+                            resultados.append("\nSe ha encontrado una Insercion en: " + resultSet.getString("Tabla"));
+                            resultados.append("\n--------------------------------------------------------");
                             break;
                         case "D":
-                            consola.append("\nSe ha encontrado una Eliminacion en: " + resultSet.getString("tabla"));
-                            consola.append("\n--------------------------------------------------------");
+                            resultados.append("\nSe ha encontrado una Eliminacion en: " + resultSet.getString("Tabla"));
+                            resultados.append("\n--------------------------------------------------------");
                             break;
                         case "U":
-                            consola.append("\nSe ha encontrado una Actualizacion en: " + resultSet.getString("tabla"));
-                            consola.append("\n--------------------------------------------------------");
+                            resultados.append("\nSe ha encontrado una Actualizacion en: " + resultSet.getString("Tabla"));
+                            resultados.append("\n--------------------------------------------------------");
                             break;
                     }
                     String temp = resultSet.getString("sqlorigen");
@@ -137,17 +136,17 @@ public class Postgre {
                     diferencias.add(temp);
                 } while (resultSet.next());
             } else {
-                consola.append("\nLas Bases de Datos se sincronizaron en la tabla: " + tabla);
-                consola.append("\n--------------------------------------------------------");
+                resultados.append("\nLas Bases de Datos ya estan sincronizados para la tabla: " + tabla);
+                resultados.append("\n--------------------------------------------------------");
                 return false;
             }
         } catch (SQLException ex) {
             if (ex.getCause() == null) {
-                consola.append("\nERROR: " + ex.getMessage());
+                resultados.append("\nERROR: " + ex.getMessage());
             }else{
-                consola.append("\nERROR: " + ex.getMessage() + ex.getCause().toString());
+                resultados.append("\nERROR: " + ex.getMessage() + ex.getCause().toString());
             }
-            consola.append("\n--------------------------------------------------------");
+            resultados.append("\n--------------------------------------------------------");
             return false;
         } 
         return true;
@@ -155,7 +154,7 @@ public class Postgre {
     
     private String obtenerCondicionTiempo(String tabla){
         if (cargarTablas()) {
-            String temp = getMarcaDeTimepo(tabla);
+            String temp = getFechaActualizacion(tabla);
             if (temp != null) {
                 return "WHERE fecha >= '" + temp + "' ";
             }else{
@@ -167,16 +166,16 @@ public class Postgre {
         
     }
     
-    public String getMarcaDeTimepo(String tabla){
-        String timeStamp = "";
+    public String getFechaActualizacion(String tabla){
+        String tiempo = "";
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         Tablas temp = getTabla(tabla);
         if (temp == null) {
             return null;
         }else{
-            timeStamp = dateFormat.format(temp.getFecha());
+            tiempo = dateFormat.format(temp.getFecha());
         }
-        return timeStamp;
+        return tiempo;
     }
     
     public boolean cargarTablas(){
@@ -192,7 +191,7 @@ public class Postgre {
         } catch (FileNotFoundException e) {
             estado = false;
         } catch (EOFException e) {
-            System.out.println("Fin de fichero");
+            System.out.println("Final de Archivo");
         } catch (IOException e) {
             System.out.println(e.getMessage());
         } catch (ClassNotFoundException ex) {
@@ -242,7 +241,7 @@ public class Postgre {
         return diferencias;
     }
 
-    public void setRefDate(String tabla, Date Fecha) {
+    public void setFechaActualizacion(String tabla, Date Fecha) {
         Tablas temp = getTabla(tabla);
         if (temp == null) {
             tablas.add(new Tablas(tabla, Fecha));
@@ -277,5 +276,5 @@ public class Postgre {
         this.tablas = tablas;
     }
     
-    
+
 }
