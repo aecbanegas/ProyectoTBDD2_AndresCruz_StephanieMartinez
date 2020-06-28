@@ -33,6 +33,12 @@ public class Principal extends javax.swing.JFrame {
         tablasOrigen.add("jobs");
         tablasOrigen.add("locations");
         tablasOrigen.add("regions");
+        DefaultListModel modelo = (DefaultListModel) jl_sinReplicar.getModel();
+                for (int i = 0; i < tablasOrigen.size(); i++) {
+                    modelo.addElement(tablasOrigen.get(i));
+                }
+                
+                jl_sinReplicar.setModel(modelo);
     }
     
     /**
@@ -610,16 +616,12 @@ public class Principal extends javax.swing.JFrame {
         destino.crearConexion();
         try {
             if (origen.estadoConexion()&&destino.estadoConexion()) {
-                DefaultListModel modelo = (DefaultListModel) jl_sinReplicar.getModel();
-                for (int i = 0; i < tablasOrigen.size(); i++) {
-                    modelo.addElement(tablasOrigen.get(i));
-                }
-                
-                jl_sinReplicar.setModel(modelo);
                 jd_replicar.pack();
                 jd_replicar.setModal(true);
                 jd_replicar.setLocationRelativeTo(this);
                 jd_replicar.setVisible(true);
+            }else{
+                JOptionPane.showMessageDialog(null, "Ocurrio un error con una o ambas conexiones...\nRevise la informacion y haga las pruebas respectivas para poder guardar y replicar.");
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -650,7 +652,7 @@ public class Principal extends javax.swing.JFrame {
                     }
                     if (!fallo) {
                         origen.setFechaActualizacion(tablamodelo, new Date());
-                        jta_actualizaciones.append("\nSe han actualizado los datos de la tabla "+ tablamodelo+": "+ origen.getFechaActualizacion(tablamodelo));
+                        jta_actualizaciones.append("\nSe han actualizado los datos de la tabla "+ tablamodelo+": "+ origen.getFechaActualizacion(tablamodelo)+" GMT");
                         jta_actualizaciones.append("\n--------------------------------------------------------");
                         jta_actualizaciones.append("\nSincronizacion realizada entre bases de Datos");
                         jta_actualizaciones.append("\n--------------------------------------------------------");

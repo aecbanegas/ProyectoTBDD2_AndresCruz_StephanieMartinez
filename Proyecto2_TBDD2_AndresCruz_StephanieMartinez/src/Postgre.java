@@ -19,6 +19,7 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.TimeZone;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -114,7 +115,6 @@ public class Postgre {
             Statement statement = conexion.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
 
-            //Verificador de Sincornizacion
             if (resultSet.next()) {
                 do {
                     switch(resultSet.getString("operacion")){
@@ -169,6 +169,7 @@ public class Postgre {
     public String getFechaActualizacion(String tabla){
         String tiempo = "";
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         Tablas temp = getTabla(tabla);
         if (temp == null) {
             return null;
