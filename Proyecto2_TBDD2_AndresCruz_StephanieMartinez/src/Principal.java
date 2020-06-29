@@ -530,12 +530,15 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jb_SalirMouseClicked
 
     private void jb_regresarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_regresarMouseClicked
+        jta_actualizaciones.setText("");
         origen.cerrarConexion();
         destino.cerrarConexion();
         jd_replicar.setVisible(false);
     }//GEN-LAST:event_jb_regresarMouseClicked
 
     private void jb_regresarConfiguracionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_regresarConfiguracionMouseClicked
+        ta_DestinoPrueba.setText("");
+        ta_OrigenPrueba.setText("");
         jd_configuracion.setVisible(false);
     }//GEN-LAST:event_jb_regresarConfiguracionMouseClicked
 
